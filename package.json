@@ -1,9 +1,9 @@
 {
-  "name": "easy-decorator",
+  "name": "typescript-decorator-builder",
   "repository": {
-    "url": "git@github.com:duongvanba/easy-decorator.git"
+    "url": "git@github.com:duongvanba/typescript-decorator-builder.git"
   },
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -12,7 +12,7 @@
   },
   "scripts": {
     "build": "rm -rf build; tsc -b tsconfig.json",
-    "deploy": "clear; git add .; git commit -m \"Update\"; git push origin master; npm publish"
+    "deploy": "clear; git add .; git commit -m \"Update\"; git push origin main; npm publish"
   },
   "devDependencies": {
     "@types/node": "^14.14.32"

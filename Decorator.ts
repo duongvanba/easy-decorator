@@ -13,23 +13,23 @@ export class Decorator<T> {
         return [decorator, list_metadata] as [typeof decorator, typeof list_metadata]
     }
 
-
     private hooks: Function[] = []
 
     constructor(private classWrapper: (target, options: T) => any = () => { }) { }
 
-    createPropertyOrMethodDecorator<T>(methodWrapper: (target: any, method: string, options: T) => any) {
+    createPropertyOrMethodDecorator<T>(methodWrapper?: (target: any, method: string, options: T) => any) {
         const token = Symbol()
         const decorator = (options?: T) => (target, method, descriptor) => {
             const list = Reflect.getMetadata(token, target) || []
             list.push({ options, method })
             Reflect.defineMetadata(token, list, target)
         }
-        this.hooks.push(target => {
+        methodWrapper && this.hooks.push(target => {
             const list = Reflect.getMetadata(token, target) as Array<{ options: T, method: string }> || []
             for (const { method, options } of list) methodWrapper(target, method, options)
         })
-        return decorator
+        const list_metadata = target => (Reflect.getMetadata(token, target) || []) as Array<{ method: string, options: T }>
+        return [decorator, list_metadata] as [typeof decorator, typeof list_metadata]
     }
 
     getClassDecorator() {
