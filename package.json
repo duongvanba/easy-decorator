@@ -1,0 +1,20 @@
+{
+  "name": "easy-decorator",
+  "repository": {
+    "url": "git@github.com:duongvanba/easy-decorator.git"
+  },
+  "version": "1.0.0",
+  "description": "",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "dependencies": {
+    "reflect-metadata": "^0.1.13"
+  },
+  "scripts": {
+    "build": "rm -rf build; tsc -b tsconfig.json",
+    "deploy": "clear; git add .; git commit -m \"Update\"; git push origin master; npm publish"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.32"
+  }
+}
