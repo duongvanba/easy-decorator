@@ -4,12 +4,12 @@ export class Decorator<T> {
 
     static createMetadataStorage = <T>() => {
         const token = Symbol()
-        const decorator = (options: T) => target => {
-            const list: T[] = Reflect.getMetadata(token, target) || []
-            list.push(options)
+        const decorator = (options: T) => (target, method) => {
+            const list: Array<{ options: T, method: string }> = Reflect.getMetadata(token, target) || []
+            list.push({ method, options })
             Reflect.defineMetadata(token, list, target)
         }
-        const list_metadata = target => (Reflect.getMetadata(token, target) || []) as T[]
+        const list_metadata = target => (Reflect.getMetadata(token, target) || []) as Array<{ options: T, method: string }>
         return [decorator, list_metadata] as [typeof decorator, typeof list_metadata]
     }
 
