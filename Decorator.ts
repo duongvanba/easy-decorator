@@ -36,13 +36,17 @@ export class Decorator<T> {
         const hooks = this.hooks
         const classWrapper = this.classWrapper
         return (options?: T) => C => {
-            return class extends C {
-                constructor(...args) {
-                    super(...args)
-                    for (const hook of hooks) hook(this)
-                    classWrapper(this, options)
+            const D = {
+                [C.name]: class extends C {
+                    constructor(...args) {
+                        super(...args)
+                        for (const hook of hooks) hook(this)
+                        classWrapper(this, options)
+                    }
                 }
-            } as any
+            }
+
+            return D[C.name]
         }
     }
 
