@@ -2,16 +2,6 @@ import 'reflect-metadata'
 
 export class Decorator<T> {
 
-    static createMetadataStorage = <T>() => {
-        const token = Symbol()
-        const decorator = (options: T) => (target, method) => {
-            const list: Array<{ options: T, method: string }> = Reflect.getMetadata(token, target) || []
-            list.push({ method, options })
-            Reflect.defineMetadata(token, list, target)
-        }
-        const list_metadata = target => (Reflect.getMetadata(token, target) || []) as Array<{ options: T, method: string }>
-        return [decorator, list_metadata] as [typeof decorator, typeof list_metadata]
-    }
 
     private hooks: Function[] = []
 
@@ -33,9 +23,11 @@ export class Decorator<T> {
     }
 
     getClassDecorator() {
+        const token = Symbol.for(`${Math.random()}`)
         const hooks = this.hooks
         const classWrapper = this.classWrapper
-        return (options?: T) => C => {
+
+        const decorator = (options?: T) => C => {
             const D = {
                 [C.name]: class extends C {
                     constructor(...args) {
@@ -45,21 +37,12 @@ export class Decorator<T> {
                     }
                 }
             }
-
-            return D[C.name]
+            Reflect.defineMetadata(token, D[C.name], options)
+            return D[C.name] as any 
         }
-    }
 
-    getExtendableClass() {
-        const hooks = this.hooks
-        const classWrapper = this.classWrapper
-        return (options: T = {} as any, C: { new(...args: any[]): any } = class { }) => new class extends C {
-            constructor(...args) {
-                super(...args)
-                for (const hook of hooks) hook(this)
-                classWrapper(this, options)
-            }
-        }
+        const get_options = C => Reflect.getMetadata(token, C) as T
+        return [decorator, get_options] as [typeof decorator, typeof get_options]
     }
 
 
