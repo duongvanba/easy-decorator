@@ -37,8 +37,8 @@ export class Decorator<T> {
                     }
                 }
             }
-            Reflect.defineMetadata(token, D[C.name], options)
-            return D[C.name] as any 
+            Reflect.defineMetadata(token, options, D[C.name])
+            return D[C.name] as any
         }
 
         const get_options = C => Reflect.getMetadata(token, C) as T
